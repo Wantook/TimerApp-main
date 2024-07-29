@@ -1,0 +1,151 @@
+<Window x:Class="CircleReaction.MainWindow"
+        // Specifies the class this XAML file is defining, MainWindow in the CircleReaction namespace
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        // Default XAML namespace for WPF elements
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        // XAML namespace for XAML language elements
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        // Namespace for design-time tools
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        // Namespace for markup compatibility
+        xmlns:local="clr-namespace:CircleReaction"
+        // Namespace for local project classes
+        mc:Ignorable="d"
+        // Indicates that the designer-specific attributes should be ignored
+        Title="MainWindow" 
+        // Title of the window
+        Height="600" 
+        // Height of the window
+        Width="350"
+        // Width of the window
+        AllowsTransparency="True"
+        // Allows the window to have transparent parts
+        WindowStartupLocation="CenterScreen"
+        // Starts the window in the center of the screen
+        WindowStyle="None"
+        // Removes the default window style (no border, title bar, etc.)
+        Background="Transparent">
+        // Makes the window background transparent
+
+    <Grid>
+        // The root layout container, a grid
+
+        <Border Background="Black" CornerRadius="20" />
+        // A black border with rounded corners (radius 20) as a background
+
+        <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+            // Nested grid centered both vertically and horizontally
+
+            <Path Style="{StaticResource ProgressBarBase}" />
+            // A Path element styled using the ProgressBarBase style
+
+            <Grid Height="250" Width="250" Margin="255,-90,-235,0">
+                // Another nested grid with specific dimensions and margins
+
+                <Grid.RenderTransform>
+                    <RotateTransform Angle="90" />
+                    // Rotates the grid 90 degrees
+                </Grid.RenderTransform>
+
+                <Path x:Name="CircularProgressBar" Style="{StaticResource ProgressBarStyle}" />
+                // A Path element named CircularProgressBar, styled using the ProgressBarStyle
+            </Grid>
+        </Grid>
+
+        <Border Style="{StaticResource BackgroundBorder}" />
+        // A border element styled using BackgroundBorder
+
+        <Ellipse Style="{StaticResource BackgroundEllipse}" />
+        // An ellipse element styled using BackgroundEllipse
+
+        <Ellipse Style="{StaticResource ButtonEllipse}" />
+        // An ellipse element styled using ButtonEllipse
+
+        <Ellipse Style="{StaticResource ButtonBackground}" />
+        // An ellipse element styled using ButtonBackground
+
+        <TextBlock x:Name="StatusText"
+                   Text="READY"
+                   FontSize="24"
+                   FontWeight="Bold"
+                   Foreground="White"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Top"
+                   Margin="0,100,0,0"/>
+        // A TextBlock named StatusText, displaying "READY" with specified styling and alignment
+
+        <ToggleButton x:Name="Play_Btn"
+                      Height="75"
+                      Width="75"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      Margin="0,280,0,0"
+                      Style="{StaticResource PlayBtn_Style}">
+            // A ToggleButton named Play_Btn, with specified dimensions, alignment, margin, and styling
+
+            <ToggleButton.Resources>
+                // Resources for the ToggleButton
+
+                <Storyboard x:Key="Start_Animation">
+                    // A storyboard for starting animation
+
+                    <DoubleAnimation BeginTime="0:0:0"
+                                     Storyboard.TargetName="CircularProgressBar"
+                                     Storyboard.TargetProperty="StrokeDashOffset"
+                                     Duration="0:15:30"
+                                     From="100"
+                                     To="0" />
+                    // Animation for StrokeDashOffset property of CircularProgressBar from 100 to 0 over 15 minutes and 30 seconds
+
+                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                     Storyboard.TargetName="CircularProgressBar"
+                                     From="0"
+                                     To="1"
+                                     BeginTime="0:0:0"
+                                     Duration="0:0:0" />
+                    // Animation for opacity of CircularProgressBar from 0 to 1 immediately
+
+                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                     Storyboard.TargetName="CircularProgressBar"
+                                     From="1"
+                                     To="0"
+                                     BeginTime="0:4:53"
+                                     Duration="0:0:0" />
+                    // Animation for opacity of CircularProgressBar from 1 to 0 after 4 minutes and 53 seconds
+
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="StatusText"
+                                                   Storyboard.TargetProperty="Text">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="GO!" />
+                        // Changes StatusText to "GO!" immediately
+                    </ObjectAnimationUsingKeyFrames>
+                </Storyboard>
+
+                <Storyboard x:Key="Stop_Animation">
+                    // A storyboard for stopping animation
+
+                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                     Storyboard.TargetName="CircularProgressBar"
+                                     From="1"
+                                     To="0"
+                                     BeginTime="0:0:0"
+                                     Duration="0:0:0" />
+                    // Animation for opacity of CircularProgressBar from 1 to 0 immediately
+                </Storyboard>
+            </ToggleButton.Resources>
+
+            <ToggleButton.Triggers>
+                // Event triggers for the ToggleButton
+
+                <EventTrigger RoutedEvent="ToggleButton.Checked">
+                    <BeginStoryboard Storyboard="{StaticResource Start_Animation}" />
+                    // Starts Start_Animation when the button is checked
+                </EventTrigger>
+
+                <EventTrigger RoutedEvent="ToggleButton.Unchecked">
+                    <BeginStoryboard Storyboard="{StaticResource Stop_Animation}" />
+                    // Starts Stop_Animation when the button is unchecked
+                </EventTrigger>
+            </ToggleButton.Triggers>
+        </ToggleButton>
+    </Grid>
+</Window>
